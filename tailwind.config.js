@@ -6,7 +6,7 @@ module.exports = {
   theme: {
     extend: {
       fontFamily: {
-        heading: 'Inter600semiBold',
+        heading: 'Inter_600semiBold',
         subtitle: 'Inter_500Medium',
         body: 'Inter_400Regular',
         bold: 'Inter_700Bold',

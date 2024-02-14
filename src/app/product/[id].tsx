@@ -1,5 +1,6 @@
 import { View, Image, Text } from "react-native";
 import { useLocalSearchParams } from 'expo-router'
+import { Redirect } from "expo-router";
 import { PRODUCTS } from "@/utils/data/products";
 import { FormatCurrency } from "@/utils/functions/format-currency";
 import {Button} from "@/components/button"
@@ -11,11 +12,14 @@ export default function Products(){
   const cartStore = useCartStore()
   const {id} = useLocalSearchParams()
   const navigation = useNavigation()
-  const products = PRODUCTS.filter((product) => product.id === id)[0]
+  const products = PRODUCTS.find((product) => product.id === id)
 
   function handleAddToCart(){
-    cartStore.addToCart(products)
+    cartStore.addToCart(products!)
     navigation.goBack()
+  }
+  if(!products){
+    return <Redirect href="/" />
   }
   return(
     <View className="flex-1" > 
@@ -24,8 +28,9 @@ export default function Products(){
         resizeMode="cover"
       />
       <View className="p-5 mb-8 flex-1 ">
-        <Text className="text-cyan-300 text-2xl font-heading my-0.5">{FormatCurrency(products.price)}</Text>
-        <Text className="text-slate-400 text-base font-body leading-6 mb-6 ">{products.description}</Text>
+      <Text className="text-white text-xl font-heading  ">{products.title}</Text>
+        <Text className="text-cyan-300 text-2xl font-heading mb-3 mt-1">{FormatCurrency(products.price)}</Text>
+        <Text className="text-slate-400 text-base font-body leading-6 mb-4 ">{products.description}</Text>
         {
           products.ingredients.map((ingredient ) => (
             <Text key={ingredient} className="text-slate-400 text-xs font-body leading-6 mb-1">
