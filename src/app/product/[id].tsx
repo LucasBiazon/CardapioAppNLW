@@ -3,13 +3,20 @@ import { useLocalSearchParams } from 'expo-router'
 import { PRODUCTS } from "@/utils/data/products";
 import { FormatCurrency } from "@/utils/functions/format-currency";
 import {Button} from "@/components/button"
-
+import { useCartStore } from "@/stores/cartStore";
 import {Feather} from '@expo/vector-icons'
 import { LinkButton } from "@/components/link-button";
+import { useNavigation } from 'expo-router'
 export default function Products(){
+  const cartStore = useCartStore()
   const {id} = useLocalSearchParams()
+  const navigation = useNavigation()
   const products = PRODUCTS.filter((product) => product.id === id)[0]
 
+  function handleAddToCart(){
+    cartStore.addToCart(products)
+    navigation.goBack()
+  }
   return(
     <View className="flex-1" > 
       <Image source={products.cover} 
@@ -29,7 +36,7 @@ export default function Products(){
         }
       </View>
       <View className="p-5 pb-8  gap-5">
-        <Button>
+        <Button onPress={handleAddToCart}>
           <Button.Icon>
             <Feather name="plus-circle" size={20}/>
           </Button.Icon>

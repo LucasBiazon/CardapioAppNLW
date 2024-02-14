@@ -5,9 +5,12 @@ import {CATEGORIES, MENU} from '@/utils/data/products'
 import { useState, useRef } from 'react'
 import { Products } from '@/components/products'
 import { Link } from 'expo-router'
+import { useCartStore } from '@/stores/cartStore'
 
 export default function Home(){
+  const cartStore = useCartStore()
   let [selectedCategory, setSelectedCategory] = useState<string>(CATEGORIES[0])
+  const cartQuantItems = cartStore.products.reduce((total, product) => total + product.quantity, 0)
   const SectionListRef = useRef<SectionList>(null)
   function handleCategorySelected(selectedCategory: string){
     setSelectedCategory(selectedCategory)
@@ -22,7 +25,7 @@ export default function Home(){
   }
   return (
     <View className='flex-1 pt-8' >
-     <Header cardQuantItems={4} title={'Faça seu pedido'}></Header>
+     <Header cardQuantItems={cartQuantItems} title={'Faça seu pedido'}></Header>
       <FlatList 
         data={CATEGORIES}
         keyExtractor={(item) => item}
