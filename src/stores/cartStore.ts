@@ -1,5 +1,8 @@
 import { ProductProps } from "@/utils/data/products";
 import { create  } from "zustand";
+
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { createJSONStorage, persist } from "zustand/middleware";
 import * as cartInMemory from "./helpers/cartInMemory";
 
 export type ProductCartProps =  ProductProps &{
@@ -12,7 +15,7 @@ type StateProps ={
   removeToProduct: (product: ProductCartProps) => void;
 }
 
-export const useCartStore = create<StateProps>((set) => ({
+export const useCartStore = create(persist<StateProps>((set) => ({
   products: [],
   addToCart: (product: ProductProps ) => set((state) => ({
     products: cartInMemory.addToCart(state.products, product)
@@ -20,5 +23,8 @@ export const useCartStore = create<StateProps>((set) => ({
   removeToProduct: (product: ProductCartProps) => set((state) => ({
     products: cartInMemory.removeToProduct(state.products, product.id)
   })),
-}))
+}), {
+  name: "cardapioApp",
+  storage: createJSONStorage(() => AsyncStorage)
+}));
 
